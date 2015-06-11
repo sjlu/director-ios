@@ -32,14 +32,14 @@ class SearchTableViewCell: UITableViewCell {
         self.addSubview(releaseDateLabel!)
     }
     
-    func configureWithMovie(movie:AnyObject) {
+    func configureWithMovie(movie:Movie) {
         posterImageView?.image = nil
         
-        var url = NSURL(string: movie["poster_url"] as! String)
+        var url = NSURL(string: movie.poster_url!)
         posterImageView?.hnk_setImageFromURL(url!)
         
-        movieTitleLabel?.text = movie["name"] as? String
-        releaseDateLabel?.text = movie["date"] as? String
+        movieTitleLabel?.text = movie.title
+        releaseDateLabel?.text = movie.date
     }
     
     override func awakeFromNib() {

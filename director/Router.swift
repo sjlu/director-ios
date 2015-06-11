@@ -14,7 +14,7 @@ enum Router: URLRequestConvertible {
     
     case Movies()
     case Search(String)
-    case AddMovie(AnyObject)
+    case AddMovie(Movie)
     
     var method: Alamofire.Method {
         switch self {
@@ -39,10 +39,13 @@ enum Router: URLRequestConvertible {
         let URL = NSURL(string: urlString)
         let mutableURLRequest = NSMutableURLRequest(URL: URL!)
         mutableURLRequest.HTTPMethod = method.rawValue
-        
+//
         switch self {
         case .AddMovie(let movie):
-            return Alamofire.ParameterEncoding.JSON.encode(mutableURLRequest, parameters: ["movie": movie]).0
+            return Alamofire.ParameterEncoding.JSON.encode(mutableURLRequest, parameters:
+                ["movie": [
+                    "id": movie.tmdb_id,
+                    "name": movie.title]]).0
         default:
             return Alamofire.ParameterEncoding.JSON.encode(mutableURLRequest, parameters: nil).0
         }

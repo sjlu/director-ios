@@ -32,14 +32,14 @@ class AppTableViewCell: UITableViewCell {
         self.addSubview(statusLabel!)
     }
     
-    func configureWithMovie(movie:AnyObject) {
+    func configureWithMovie(movie:Movie) {
         posterImageView?.image = nil
-        
-        var url = NSURL(string: movie["poster_url"] as! String)
+
+        var url = NSURL(string: movie.poster_url!)
         posterImageView?.hnk_setImageFromURL(url!)
         
-        movieTitleLabel?.text = movie["title"] as? String
-        statusLabel?.text = movie["status"] as? String
+        movieTitleLabel?.text = movie.title
+        statusLabel?.text = movie.status
     }
     
     override func awakeFromNib() {

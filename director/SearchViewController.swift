@@ -11,7 +11,7 @@ import Alamofire
 
 class SearchViewController: UITableViewController, UISearchBarDelegate {
     
-    var data: NSMutableArray?
+    var data: [Movie] = []
     //    var disableViewOverlay: UIView?
     var searchBar: UISearchBar?
     
@@ -23,8 +23,6 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         
         self.title = "Add Content"
         self.view.backgroundColor = UIColor.backgroundColor()
-        
-        self.data = NSMutableArray()
         
         //        self.disableViewOverlay = UIView(frame: CGRect(x: 0, y: 44, width: screenBounds.width, height: screenBounds.height))
         //        self.disableViewOverlay?.backgroundColor = UIColor.blackColor()
@@ -56,7 +54,15 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
         Alamofire.request(
             Router.Search(search)
             ).responseJSON { (request, response, data, error) in
-                self.data = data as? NSMutableArray
+                self.data = data!.allObjects.map {
+                    (var object) -> Movie in
+                    var dict = object as! [String:AnyObject]
+                    var movie = Movie(title: dict["name"] as! String, tmdb_id: dict["id"] as! NSNumber)
+                    movie.poster_url = dict["poster_url"] as? String
+                    movie.type = dict["type"] as? String
+                    movie.date = dict["date"] as? String
+                    return movie
+                }
                 self.tableView.reloadData()
         }
     }
@@ -104,11 +110,7 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.data == nil {
-            return 0
-        } else {
-            return self.data!.count
-        }
+        return self.data.count
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -127,15 +129,15 @@ class SearchViewController: UITableViewController, UISearchBarDelegate {
             cell?.setUpCell()
         }
         
-        var cellData:AnyObject? = self.data?.objectAtIndex(indexPath.row)
-        cell?.configureWithMovie(cellData!)
+        var cellData = self.data[indexPath.row]
+        cell?.configureWithMovie(cellData)
         return cell!
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var cellData:AnyObject? = self.data?.objectAtIndex(indexPath.row)
+        var cellData = self.data[indexPath.row]
         Alamofire.request(
-            Router.AddMovie(cellData!)
+            Router.AddMovie(cellData)
             ).responseJSON { (request, response, data, error) in
                 self.dismissViewControllerAnimated(true, completion: nil)
         }

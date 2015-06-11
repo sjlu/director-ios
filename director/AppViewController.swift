@@ -11,8 +11,9 @@ import Alamofire
 import Haneke
 
 class AppViewController: UITableViewController {
-    
-    var data: NSMutableArray!
+
+    // Status -> Movies
+    var data: [String:[Movie]!] = [:]
     var screenBounds: CGRect!
     
     func getMovies() {
@@ -24,12 +25,30 @@ class AppViewController: UITableViewController {
         Alamofire.request(
             Router.Movies()
             ).responseJSON { (request, response, data, error) in
-                self.data = data as? NSMutableArray
+                // map dictionaries to Movie struct
+                let movies = data!.allObjects.map {
+                    (var object) -> Movie in
+                    var dict = object as! [String:AnyObject]
+                    var movie = Movie(title: dict["title"] as! String, tmdb_id: dict["tmdb_id"] as! NSNumber)
+                    movie.poster_url = dict["poster_url"] as? String
+                    movie.status = dict["status"] as! String
+                    return movie
+                }
+
+                for movie in movies {
+                    if (self.data[movie.status] != nil) {
+                        self.data[movie.status]?.append(movie)
+                    }
+                    else {
+                        self.data[movie.status] = [movie]
+                    }
+                }
+
                 self.tableView.reloadData()
                 activityIndicator.removeFromSuperview()
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -49,12 +68,7 @@ class AppViewController: UITableViewController {
         presentViewController(searchNavView, animated: true, completion: nil)
         
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+
     // tableview realted
     override func viewDidLayoutSubviews() {
         self.tableView.separatorInset = UIEdgeInsetsZero
@@ -62,15 +76,16 @@ class AppViewController: UITableViewController {
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return self.data.count
+    }
+
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String {
+        return self.data.keys.array[section]
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.data == nil {
-            return 0
-        } else {
-            return self.data!.count
-        }
+        let key = self.data.keys.array[section]
+        return self.data[key]!.count
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -80,6 +95,10 @@ class AppViewController: UITableViewController {
     override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 95
     }
+
+    func movieForIndexPath(indexPath: NSIndexPath) -> Movie {
+        return self.data[self.data.keys.array[indexPath.section]]![indexPath.row]
+    }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell : AppTableViewCell? = tableView.dequeueReusableCellWithIdentifier("AppTableViewCell") as? AppTableViewCell
@@ -87,16 +106,14 @@ class AppViewController: UITableViewController {
             cell = AppTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "AppTableViewCell")
             cell?.setUpCell()
         }
-        
-        var cellData:AnyObject? = self.data?.objectAtIndex(indexPath.row)
-        cell?.configureWithMovie(cellData!)
+        cell?.configureWithMovie(movieForIndexPath(indexPath))
         return cell!
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var cellData:AnyObject? = self.data?.objectAtIndex(indexPath.row)
+        // [???]: Why can you add from the movies that have already been downloaded added?
         Alamofire.request(
-            Router.AddMovie(cellData!)
+            Router.AddMovie(movieForIndexPath(indexPath))
             ).responseJSON { (request, response, data, error) in
                 self.dismissViewControllerAnimated(true, completion: nil)
         }

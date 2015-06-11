@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		091E41511B291833002B3A1A /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091E41501B291833002B3A1A /* Movie.swift */; };
 		152F767A1B27C9D9008EEF75 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152F76791B27C9D9008EEF75 /* SearchViewController.swift */; };
 		152F767C1B27CA11008EEF75 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152F767B1B27CA11008EEF75 /* SearchTableViewCell.swift */; };
 		152F76801B27DA6D008EEF75 /* AppTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152F767F1B27DA6D008EEF75 /* AppTableViewCell.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		091E41501B291833002B3A1A /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		152F76791B27C9D9008EEF75 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		152F767B1B27CA11008EEF75 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		152F767F1B27DA6D008EEF75 /* AppTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTableViewCell.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				15A01B5D1B27C75C0096398A /* Router.swift */,
 				152F76791B27C9D9008EEF75 /* SearchViewController.swift */,
 				152F767B1B27CA11008EEF75 /* SearchTableViewCell.swift */,
+				091E41501B291833002B3A1A /* Movie.swift */,
 			);
 			path = director;
 			sourceTree = "<group>";
@@ -310,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				091E41511B291833002B3A1A /* Movie.swift in Sources */,
 				15A01B561B27C5E90096398A /* AppViewController.swift in Sources */,
 				15A01B541B27C3970096398A /* UIFont+director.swift in Sources */,
 				152F767A1B27C9D9008EEF75 /* SearchViewController.swift in Sources */,
